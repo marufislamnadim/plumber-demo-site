@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Demo Site</title>
+  <style>
+    /* ── RESET & BASE ── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:'Segoe UI',Arial,sans-serif; color:#1e293b; }
+
+    /* ══════════════════════════════════════════
+       CSS VARIABLES — overridden per variant
+    ══════════════════════════════════════════ */
+    :root {
+      --nav-bg:        #0f2152;
+      --nav-text:      #fff;
+      --nav-link:      #cbd5e1;
+      --accent:        #f59e0b;
+      --accent-text:   #1e293b;
+      --hero-bg1:      #0f3270;
+      --hero-bg2:      #2563eb;
+      --hero-text:     #fff;
+      --hero-sub:      #bfdbfe;
+      --btn-radius:    8px;
+      --card-radius:   12px;
+      --section-alt:   #f8fafc;
+      --primary:       #1a4fa0;
+    }
+
+    /* ── NAV — shared structure ── */
+    nav {
+      background: var(--nav-bg);
+      padding: 0 5%;
+      height: 66px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky; top:0; z-index:100;
+    }
+    .logo        { color: var(--nav-text); font-size:1.3rem; font-weight:800; }
+    .logo em     { color: var(--accent); font-style:normal; }
+    .logo small  { display:block; font-size:.65rem; font-weight:400; opacity:.6; }
+    .nav-links a {
+      color: var(--nav-link); text-decoration:none;
+      margin-left:24px; font-size:.88rem; transition:color .2s;
+    }
+    .nav-links a:hover { color:#fff; }
+    .nav-cta {
+      background: var(--accent) !important;
+      color: var(--accent-text) !important;
+      padding: 8px 16px;
+      border-radius: var(--btn-radius);
+      font-weight:700 !important;
+    }
+
+    /* ── HERO — shared ── */
+    .hero {
+      background: linear-gradient(135deg, var(--hero-bg1) 0%, var(--hero-bg2) 100%);
+      color: var(--hero-text);
+      padding: 72px 5%;
+      display:flex; align-items:center; gap:40px;
+      min-height: 480px;
+    }
+    .hero-text { flex:1; }
+    .badge {
+      display:inline-block;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      background: rgba(255,255,255,.07);
+      padding: 4px 14px; border-radius:20px;
+      font-size:.78rem; font-weight:700;
+      margin-bottom:18px;
+    }
+    .hero h1    { font-size:2.6rem; line-height:1.2; font-weight:800; margin-bottom:14px; }
+    .hero h1 em { color:var(--accent); font-style:normal; }
+    .hero p     { color:var(--hero-sub); font-size:1rem; line-height:1.7; margin-bottom:28px; max-width:480px; }
+    .btn-row    { display:flex; gap:12px; flex-wrap:wrap; }
+    .btn-main {
+      background:var(--accent); color:var(--accent-text);
+      padding:13px 26px; border-radius:var(--btn-radius);
+      font-weight:700; text-decoration:none; font-size:.95rem;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-main:hover { transform:translateY(-2px); box-shadow:0 6px 18px rgba(0,0,0,.25); }
+    .btn-ghost {
+      border:2px solid rgba(255,255,255,.4); color:#fff;
+      padding:13px 26px; border-radius:var(--btn-radius);
+      font-weight:600; text-decoration:none; font-size:.95rem;
+      transition:background .2s;
+    }
+    .btn-ghost:hover { background:rgba(255,255,255,.1); }
+    .stat-row   { display:flex; gap:28px; margin-top:32px; }
+    .stat .n    { font-size:1.6rem; font-weight:900; color:var(--accent); }
+    .stat .l    { font-size:.72rem; color:rgba(255,255,255,.5); }
+
+    /* ── HERO SIDE CARD ── */
+    .hero-card {
+      background:rgba(255,255,255,.1);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:14px;
+      padding:28px 32px;
+      text-align:center;
+      flex:0 0 auto; min-width:210px;
+    }
+    .hero-card .icon { font-size:3.5rem; margin-bottom:8px; }
+    .hero-card .biz  { font-size:1.05rem; font-weight:700; color:#fff; }
+    .hero-card .city { font-size:.8rem; color:rgba(255,255,255,.5); margin-bottom:12px; }
+    .hero-card .phone-box {
+      background:rgba(0,0,0,.25);
+      border-radius:8px; padding:10px 14px;
+    }
+    .hero-card .phone { font-size:1rem; font-weight:700; color:var(--accent); }
+    .hero-card .ph-lbl{ font-size:.7rem; color:rgba(255,255,255,.4); }
+
+    /* ── TRUST BAR ── */
+    .trust {
+      background:#fff; border-top:1px solid #e2e8f0; border-bottom:1px solid #e2e8f0;
+      padding:16px 5%;
+      display:flex; flex-wrap:wrap; justify-content:center; gap:32px;
+    }
+    .trust-i { display:flex; align-items:center; gap:7px; font-size:.82rem; color:#64748b; font-weight:500; }
+
+    /* ── SECTION BASE ── */
+    .sec         { padding:64px 5%; }
+    .sec.alt     { background:var(--section-alt); }
+    .sec-head    { text-align:center; margin-bottom:44px; }
+    .sec-head .tag { display:inline-block; color:var(--primary); font-weight:700;
+                     font-size:.75rem; letter-spacing:1px; text-transform:uppercase; margin-bottom:6px; }
+    .sec-head h2 { font-size:1.9rem; font-weight:800; }
+    .sec-head p  { color:#64748b; margin-top:8px; }
+
+    /* ── SERVICES GRID ── */
+    .svc-grid {
+      display:grid;
+      grid-template-columns:repeat(auto-fill,minmax(230px,1fr));
+      gap:20px;
+    }
+    .svc-card {
+      background:#fff; border:1px solid #e2e8f0;
+      border-radius:var(--card-radius); padding:24px 20px;
+      transition:transform .2s, box-shadow .2s;
+    }
+    .svc-card:hover { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.07); }
+    .svc-card .si { font-size:1.9rem; margin-bottom:12px; }
+    .svc-card h3  { font-size:.95rem; font-weight:700; margin-bottom:6px; }
+    .svc-card p   { font-size:.82rem; color:#64748b; line-height:1.6; }
+
+    /* ── WHY US ── */
+    .why-wrap  { display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:center; }
+    .why-vis {
+      background:linear-gradient(135deg,var(--primary) 0%,var(--hero-bg2) 100%);
+      border-radius:14px; padding:36px; color:#fff; text-align:center;
+    }
+    .why-vis .big  { font-size:5rem; font-weight:900; opacity:.12; line-height:1; }
+    .why-vis h3    { font-size:1.2rem; font-weight:700; }
+    .why-vis p     { opacity:.7; font-size:.85rem; margin-top:6px; }
+    .pts           { display:flex; flex-direction:column; gap:18px; }
+    .pt            { display:flex; gap:12px; align-items:flex-start; }
+    .pt-ic { width:34px; height:34px; background:var(--primary); color:#fff;
+              border-radius:8px; display:flex; align-items:center; justify-content:center;
+              font-size:1rem; flex-shrink:0; }
+    .pt h4 { font-size:.9rem; font-weight:700; margin-bottom:3px; }
+    .pt p  { font-size:.82rem; color:#64748b; line-height:1.5; }
+
+    /* ── REVIEWS ── */
+    .rev-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:20px; }
+    .rev-card { background:#fff; border:1px solid #e2e8f0; border-radius:var(--card-radius); padding:22px; }
+    .stars    { color:var(--accent); margin-bottom:8px; font-size:.95rem; }
+    .rev-card p { font-size:.83rem; color:#64748b; line-height:1.7; margin-bottom:14px; }
+    .rev-who  { display:flex; align-items:center; gap:10px; }
+    .av { width:36px; height:36px; background:var(--primary); color:#fff;
+          border-radius:50%; display:flex; align-items:center; justify-content:center;
+          font-weight:700; font-size:.85rem; }
+    .av-n { font-size:.83rem; font-weight:700; }
+    .av-l { font-size:.73rem; color:#94a3b8; }
+
+    /* ── CTA BANNER ── */
+    .cta-sec {
+      background:linear-gradient(135deg,var(--hero-bg1),var(--primary));
+      color:#fff; text-align:center; padding:64px 5%;
+    }
+    .cta-sec h2    { font-size:2rem; font-weight:800; }
+    .cta-sec p     { color:rgba(255,255,255,.6); margin:12px 0 24px; }
+    .cta-sec .big-ph { font-size:1.8rem; font-weight:900; color:var(--accent); margin-bottom:24px; display:block; }
+
+    /* ── FOOTER ── */
+    footer { background:#0f172a; color:#475569; text-align:center; padding:20px 5%; font-size:.8rem; }
+    footer em { color:var(--accent); font-style:normal; }
+
+    /* ── DEMO RIBBON ── */
+    .ribbon {
+      position:fixed; bottom:0; left:0; right:0;
+      background:#1e293b; color:#fff; text-align:center;
+      padding:10px; font-size:.78rem; z-index:999;
+      border-top:2px solid var(--accent);
+    }
+    .ribbon strong { color:var(--accent); }
+
+    /* ════════════════════════════════════════
+       VARIANT 2 — White/Modern nav overrides
+    ════════════════════════════════════════ */
+    .v2 nav {
+      background:#fff;
+      box-shadow:0 1px 8px rgba(0,0,0,.08);
+    }
+    .v2 .logo        { color:#1e293b; }
+    .v2 .nav-links a { color:#64748b; }
+    .v2 .nav-links a:hover { color:#1e293b; }
+    /* v2 hero is centered */
+    .v2 .hero {
+      flex-direction:column;
+      text-align:center;
+      min-height:460px;
+    }
+    .v2 .hero p { margin-left:auto; margin-right:auto; }
+    .v2 .btn-row { justify-content:center; }
+    .v2 .stat-row { justify-content:center; }
+    .v2 .hero-card { display:none; }
+    /* feature badges instead */
+    .v2 .feat-badges {
+      display:flex; flex-wrap:wrap; justify-content:center;
+      gap:10px; margin-top:20px;
+    }
+    .v2 .feat-badge {
+      background:rgba(255,255,255,.12);
+      border:1px solid rgba(255,255,255,.25);
+      border-radius:30px; padding:6px 16px;
+      font-size:.8rem; color:#fff;
+    }
+
+    /* ════════════════════════════════════════
+       VARIANT 3 — Bold/Dark overrides
+    ════════════════════════════════════════ */
+    .v3 nav {
+      background:#12121e;
+      border-bottom:1px solid rgba(255,255,255,.07);
+    }
+    .v3 .hero {
+      background:linear-gradient(160deg,#12121e 0%,#1c1c2e 55%,#251c2c 100%) !important;
+      min-height:500px;
+    }
+    .v3 .hero h1 { font-size:2.9rem; letter-spacing:-.5px; }
+    .v3 .hero-card {
+      background:rgba(255,255,255,.04);
+      border:1px solid rgba(255,255,255,.1);
+    }
+    /* accent stripe in v3 */
+    .v3 .acc-stripe {
+      display:block; width:60px; height:4px;
+      background:var(--accent); border-radius:2px; margin-bottom:18px;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media(max-width:768px) {
+      .hero { flex-direction:column !important; }
+      .hero-card { width:100%; }
+      .why-wrap { grid-template-columns:1fr; }
+      .nav-links { display:none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ░░░ NAV ░░░ -->
+<nav>
+  <div class="logo">
+    <span id="nav-icon">⚙️</span> <em id="nav-biz">Business Name</em>
+    <small id="nav-city-tag">Your City</small>
+  </div>
+  <div class="nav-links">
+    <a href="#">Home</a>
+    <a href="#">Services</a>
+    <a href="#">About</a>
+    <a href="#" class="nav-cta" id="nav-phone-link">📞 Call Now</a>
+  </div>
+</nav>
+
+<!-- ░░░ HERO ░░░ -->
+<section class="hero">
+  <div class="hero-text">
+    <!-- v3 gets an accent stripe -->
+    <span class="acc-stripe" style="display:none" id="v3-stripe"></span>
+    <div class="badge" id="hero-badge">📍 Serving Your City</div>
+    <h1 id="hero-h1">Professional <em id="svc-type">Plumbing</em> Services<br>You Can Trust</h1>
+    <p id="hero-p">Fast, reliable and affordable. Serving local homeowners and contractors since 2014.</p>
+    <div class="btn-row">
+      <a href="#" class="btn-main">📞 Get Free Quote</a>
+      <a href="#" class="btn-ghost">Our Services ↓</a>
+    </div>
+    <div class="stat-row">
+      <div class="stat"><div class="n">200+</div><div class="l">Happy Clients</div></div>
+      <div class="stat"><div class="n">10yr</div><div class="l">Experience</div></div>
+      <div class="stat"><div class="n">24/7</div><div class="l">Emergency</div></div>
+    </div>
+    <!-- v2 feature badges (hidden by default) -->
+    <div class="feat-badges" id="feat-badges" style="display:none">
+      <span class="feat-badge">✅ Licensed & Insured</span>
+      <span class="feat-badge">⚡ Same-Day Service</span>
+      <span class="feat-badge">💰 No Hidden Fees</span>
+      <span class="feat-badge">🛡️ Guaranteed Work</span>
+    </div>
+  </div>
+  <!-- side card -->
+  <div class="hero-card" id="hero-card">
+    <div class="icon" id="hc-icon">🔧</div>
+    <div class="biz"  id="hc-biz">Business Name</div>
+    <div class="city" id="hc-city">Your City</div>
+    <div class="phone-box">
+      <div class="phone" id="hc-phone">01700-000000</div>
+      <div class="ph-lbl">Call Anytime</div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ TRUST BAR ░░░ -->
+<div class="trust">
+  <div class="trust-i"><span>✅</span> Licensed & Insured</div>
+  <div class="trust-i"><span>⚡</span> Same-Day Service</div>
+  <div class="trust-i"><span>💰</span> Fair Pricing</div>
+  <div class="trust-i"><span>🏆</span> 5-Star Rated</div>
+  <div class="trust-i"><span>🛡️</span> Work Guaranteed</div>
+</div>
+
+<!-- ░░░ SERVICES ░░░ -->
+<section class="sec">
+  <div class="sec-head">
+    <div class="tag">What We Do</div>
+    <h2>Our Services</h2>
+    <p id="svc-sub">Residential & commercial — we handle it all.</p>
+  </div>
+  <div class="svc-grid" id="svc-grid"></div>
+</section>
+
+<!-- ░░░ WHY US ░░░ -->
+<section class="sec alt">
+  <div class="why-wrap">
+    <div class="why-vis">
+      <div class="big">10+</div>
+      <h3>Years Trusted</h3>
+      <p id="why-city">Serving your local community</p>
+    </div>
+    <div>
+      <div class="tag">Why Choose Us</div>
+      <h2 style="font-size:1.7rem;font-weight:800;margin-bottom:22px;">We Do It Right — Every Time</h2>
+      <div class="pts">
+        <div class="pt"><div class="pt-ic">⏱️</div>
+          <div><h4>Fast Response</h4><p>On time every time — no waiting around.</p></div></div>
+        <div class="pt"><div class="pt-ic">💎</div>
+          <div><h4>Quality Work</h4><p>Premium materials, proven methods, guaranteed.</p></div></div>
+        <div class="pt"><div class="pt-ic">📋</div>
+          <div><h4>Transparent Pricing</h4><p>Clear quote before we start — no surprises.</p></div></div>
+        <div class="pt"><div class="pt-ic">📞</div>
+          <div><h4>Always Reachable</h4><p>24/7 emergency line — we're always there.</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ REVIEWS ░░░ -->
+<section class="sec">
+  <div class="sec-head">
+    <div class="tag">Reviews</div>
+    <h2>What Clients Say</h2>
+    <p id="rev-sub">Trusted across the local area</p>
+  </div>
+  <div class="rev-grid">
+    <div class="rev-card">
+      <div class="stars">★★★★★</div>
+      <p>"Showed up within the hour. Fixed everything perfectly and the price was fair. Highly recommend!"</p>
+      <div class="rev-who">
+        <div class="av">RK</div>
+        <div><div class="av-n">Rahman K.</div><div class="av-l" id="r1-city">Local Resident</div></div>
+      </div>
+    </div>
+    <div class="rev-card">
+      <div class="stars">★★★★★</div>
+      <p>"Very professional team. Clean workspace, explained everything before starting. Great value."</p>
+      <div class="rev-who">
+        <div class="av">SM</div>
+        <div><div class="av-n">Sultana M.</div><div class="av-l" id="r2-city">Local Homeowner</div></div>
+      </div>
+    </div>
+    <div class="rev-card">
+      <div class="stars">★★★★★</div>
+      <p>"Called at 9pm for an emergency. They came fast, fixed it, no extra charge. Real professionals."</p>
+      <div class="rev-who">
+        <div class="av">AH</div>
+        <div><div class="av-n">Akhter H.</div><div class="av-l" id="r3-city">Local Client</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ░░░ CTA ░░░ -->
+<section class="cta-sec">
+  <div class="tag" style="color:rgba(255,255,255,.5)">Ready to Start?</div>
+  <h2>Get Your Free Quote Today</h2>
+  <p id="cta-p">Available for jobs across your area</p>
+  <span class="big-ph" id="cta-phone">📞 01700-000000</span>
+  <a href="#" class="btn-main" style="font-size:1rem;padding:14px 32px;">Request Free Estimate</a>
+</section>
+
+<!-- ░░░ FOOTER ░░░ -->
+<footer>
+  <p>© 2024 <em id="ft-biz">Business Name</em> · <em id="ft-city">Your City</em> · All Rights Reserved</p>
+</footer>
+
+<!-- ░░░ DEMO RIBBON ░░░ -->
+<div class="ribbon">
+  🎨 <strong>FREE DEMO</strong> built for <strong id="ribbon-biz">Your Business</strong> — We can make this live for you. Reply to find out how!
+</div>
+
+<!-- ═══════════════════════════════════════════
+     JAVASCRIPT — reads params + applies variant
+═══════════════════════════════════════════ -->
+<script>
+const q = new URLSearchParams(window.location.search);
+
+// ── URL Parameters ──────────────────────────
+const biz    = q.get('biz')   || q.get('name') || 'Your Business';
+const city   = q.get('city')  || 'Your City';
+const phone  = q.get('phone') || '01700-000000';
+const type   = (q.get('type') || 'plumber').toLowerCase();
+const v      = parseInt(q.get('v') || '1');   // 1, 2, or 3
+
+// ── Variant Themes ──────────────────────────
+const themes = {
+  1: {
+    '--accent':      '#f59e0b',
+    '--accent-text': '#1e293b',
+    '--hero-bg1':    '#0f3270',
+    '--hero-bg2':    '#2563eb',
+    '--primary':     '#1a4fa0',
+    '--hero-sub':    '#bfdbfe',
+    '--btn-radius':  '8px',
+    '--card-radius': '12px',
+    '--nav-bg':      '#0f2152',
+    '--nav-text':    '#fff',
+    '--nav-link':    '#cbd5e1',
+    bodyClass: '',
+    heroH1Style: '',
+  },
+  2: {
+    '--accent':      '#059669',
+    '--accent-text': '#fff',
+    '--hero-bg1':    '#064e3b',
+    '--hero-bg2':    '#047857',
+    '--primary':     '#065f46',
+    '--hero-sub':    '#a7f3d0',
+    '--btn-radius':  '50px',
+    '--card-radius': '16px',
+    '--nav-bg':      '#fff',
+    '--nav-text':    '#1e293b',
+    '--nav-link':    '#64748b',
+    bodyClass: 'v2',
+    heroH1Style: '',
+  },
+  3: {
+    '--accent':      '#ea580c',
+    '--accent-text': '#fff',
+    '--hero-bg1':    '#12121e',
+    '--hero-bg2':    '#1c1c2e',
+    '--primary':     '#7c2d12',
+    '--hero-sub':    '#fcd9c0',
+    '--btn-radius':  '4px',
+    '--card-radius': '6px',
+    '--nav-bg':      '#12121e',
+    '--nav-text':    '#fff',
+    '--nav-link':    '#94a3b8',
+    bodyClass: 'v3',
+    heroH1Style: 'letter-spacing:-.5px',
+  },
+};
+
+const theme = themes[v] || themes[1];
+
+// Apply CSS variables
+const root = document.documentElement;
+Object.entries(theme).forEach(([k, val]) => {
+  if (k.startsWith('--')) root.style.setProperty(k, val);
+});
+
+// Apply body class for layout overrides
+if (theme.bodyClass) document.body.classList.add(theme.bodyClass);
+
+// v2: show feat badges, hide hero card
+if (v === 2) {
+  document.getElementById('feat-badges').style.display = 'flex';
+  document.getElementById('hero-card').style.display   = 'none';
+}
+// v3: show accent stripe
+if (v === 3) {
+  document.getElementById('v3-stripe').style.display = 'block';
+}
+// apply hero h1 style
+if (theme.heroH1Style) {
+  document.getElementById('hero-h1').style.cssText = theme.heroH1Style;
+}
+
+// ── Service type data ────────────────────────
+const types = {
+  plumber:    { label:'Plumbing',    icon:'🔧' },
+  civil:      { label:'Civil Works', icon:'🏗️' },
+  contractor: { label:'Contractor',  icon:'⚒️'  },
+  electrical: { label:'Electrical',  icon:'⚡'  },
+};
+const t = types[type] || types['plumber'];
+
+const services = {
+  plumber: [
+    { icon:'🚰', t:'Pipe Repair & Install',    d:'Leak detection, burst pipes, new runs — fast.' },
+    { icon:'🚿', t:'Bathroom & Kitchen',        d:'Full fitting, fixtures, upgrades.' },
+    { icon:'🪠', t:'Drain Cleaning',            d:'Blocked drains cleared with pro equipment.' },
+    { icon:'🔥', t:'Water Heater Service',      d:'Install, repair and maintain all heater types.' },
+    { icon:'🏠', t:'Residential Plumbing',      d:'Complete home plumbing — new build or existing.' },
+    { icon:'🏢', t:'Commercial Plumbing',       d:'Shops, offices and commercial sites handled.' },
+  ],
+  civil: [
+    { icon:'🏗️', t:'Foundation Work',          d:'Solid foundations for new builds and repairs.' },
+    { icon:'🧱', t:'Brickwork & Masonry',       d:'Walls, partitions, retaining structures.' },
+    { icon:'🏠', t:'Residential Construction',  d:'Full-build homes and renovations.' },
+    { icon:'🛣️', t:'Site Work & Drainage',     d:'Earthworks, levelling and site prep.' },
+    { icon:'🔩', t:'Structural Repairs',        d:'Crack repair, reinforcement, strengthening.' },
+    { icon:'📐', t:'Renovation & Fit-Out',      d:'Interior civil works, tiling, finishing.' },
+  ],
+  contractor: [
+    { icon:'📋', t:'Project Management',        d:'End-to-end management of build projects.' },
+    { icon:'🏗️', t:'General Contracting',      d:'Full-scope civil, electrical, plumbing works.' },
+    { icon:'🧱', t:'Renovation Works',          d:'Residential & commercial on schedule.' },
+    { icon:'⚒️', t:'Maintenance Contracts',     d:'Ongoing facility maintenance packages.' },
+    { icon:'🔧', t:'MEP Coordination',          d:'Mechanical, electrical, plumbing coordinated.' },
+    { icon:'🏢', t:'Commercial Fit-Out',        d:'Office & retail from blank canvas to finish.' },
+  ],
+};
+
+const svcs = services[type] || services.plumber;
+
+// ── Inject content ───────────────────────────
+document.title = `${biz} – ${t.label} in ${city}`;
+
+document.getElementById('nav-icon').textContent     = t.icon;
+document.getElementById('nav-biz').textContent      = biz;
+document.getElementById('nav-city-tag').textContent = city;
+document.getElementById('hero-badge').textContent   = `📍 Serving ${city}`;
+document.getElementById('svc-type').textContent     = t.label;
+document.getElementById('hero-p').textContent       =
+  `Trusted ${t.label.toLowerCase()} experts in ${city}. Fast, reliable and always fairly priced.`;
+document.getElementById('hc-icon').textContent      = t.icon;
+document.getElementById('hc-biz').textContent       = biz;
+document.getElementById('hc-city').textContent      = city;
+document.getElementById('hc-phone').textContent     = phone;
+document.getElementById('svc-sub').textContent      = `Residential & commercial ${t.label.toLowerCase()} across ${city}.`;
+document.getElementById('why-city').textContent     = `Proudly serving ${city}`;
+document.getElementById('rev-sub').textContent      = `Trusted by clients across ${city}`;
+document.getElementById('r1-city').textContent      = `${city} Resident`;
+document.getElementById('r2-city').textContent      = `${city} Homeowner`;
+document.getElementById('r3-city').textContent      = `${city} Client`;
+document.getElementById('cta-p').textContent        = `Available across ${city} and nearby areas`;
+document.getElementById('cta-phone').textContent    = `📞 ${phone}`;
+document.getElementById('ft-biz').textContent       = biz;
+document.getElementById('ft-city').textContent      = city;
+document.getElementById('ribbon-biz').textContent   = biz;
+
+// Inject services cards
+const grid = document.getElementById('svc-grid');
+svcs.forEach(s => {
+  const card = document.createElement('div');
+  card.className = 'svc-card';
+  card.innerHTML = `<div class="si">${s.icon}</div><h3>${s.t}</h3><p>${s.d}</p>`;
+  grid.appendChild(card);
+});
+</script>
+</body>
+</html>
